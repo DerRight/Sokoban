@@ -6,23 +6,36 @@ class Sokoban {
 private:
 	vector<vector<char>> map;
 	int playerX, playerY;
+	bool playerOnGoal; // 紀錄玩家是否在目標點上
 
 public:
-	Sokoban(const vector<vector<char>>& level) : map(level) {
+	Sokoban(const vector<vector<char>>& level) : map(level), playerOnGoal(false) {
 		for (int i = 0; i < map.size(); ++i) {
 			for (int j = 0; j < map[i].size(); ++j) {
 				if (map[i][j] == 'P') {
 					playerX = i;
 					playerY = j;
+					map[i][j] = ' '; // 玩家初始位置，將該位置設置為空地
 				}
 			}
 		}
 	}
 
 	void displayMap() {
-		for (const auto& row : map) {
-			for (char cell : row) {
-				cout << cell << " ";
+		for (int i = 0; i < map.size(); ++i) {
+			for (int j = 0; j < map[i].size(); ++j) {
+				if (i == playerX && j == playerY) {
+					if (playerOnGoal) {
+						cout << '+';
+					}
+					else {
+						cout << 'P';
+					}
+				}
+				else {
+					cout << map[i][j];
+				}
+				cout << ' ';
 			}
 			cout << endl;
 		}
@@ -69,9 +82,7 @@ public:
 					map[newX][newY] = ' '; // 移動箱子後的空地
 				}
 
-				swap(map[playerX][playerY], map[newX][newY]);
-				playerX = newX;
-				playerY = newY;
+				updatePlayerPosition(newX, newY);
 			}
 			else {
 				cout << "無法再推動箱子了！" << endl;
@@ -88,6 +99,21 @@ public:
 		else {
 			cout << "這裡不能再移動了！" << endl;
 		}
+	}
+
+	void updatePlayerPosition(int newX, int newY) {
+		// 玩家移動前，檢查當前玩家是否站在目標點上
+		if (playerOnGoal) {
+			map[playerX][playerY] = '.'; // 恢復原來的目標點
+		}
+		else {
+			map[playerX][playerY] = ' '; // 將原來位置設置為空地
+		}
+
+		// 更新玩家的新位置
+		playerX = newX;
+		playerY = newY;
+		playerOnGoal = (map[newX][newY] == '.'); // 檢查玩家是否站在目標點上
 	}
 };
 
