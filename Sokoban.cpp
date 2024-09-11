@@ -26,14 +26,14 @@ public:
 			for (int j = 0; j < map[i].size(); ++j) {
 				if (i == playerX && j == playerY) {
 					if (playerOnGoal) {
-						cout << '+';
+						cout << '+'; // 玩家站在目標點上會變 '+'
 					}
 					else {
-						cout << 'P';
+						cout << 'P'; // 玩家在空地時顯示 'P'
 					}
 				}
 				else {
-					cout << map[i][j];
+					cout << map[i][j]; // 顯示地圖其他內容
 				}
 				cout << ' ';
 			}
@@ -44,10 +44,10 @@ public:
 	bool isCompleted() {
 		for (const auto& row : map) {
 			for (char cell : row) {
-				if (cell == 'B') return false;
+				if (cell == 'B') return false; // 如果還有其他箱子，遊戲就會繼續
 			}
 		}
-		return true;
+		return true; // 所有箱子都已經到達目標點
 	}
 
 	void movePlayer(char direction) {
@@ -92,9 +92,10 @@ public:
 
 		// 如果是空地或目標點，可以移動
 		else if (map[newX][newY] == ' ' || map[newX][newY] == '.') {
-			swap(map[playerX][playerY], map[newX][newY]);
+			/*swap(map[playerX][playerY], map[newX][newY]);
 			playerX = newX;
-			playerY = newY;
+			playerY = newY;*/
+			updatePlayerPosition(newX, newY);
 		}
 		else {
 			cout << "這裡不能再移動了！" << endl;
